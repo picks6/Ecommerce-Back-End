@@ -7,12 +7,47 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 router.get('/', (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
+  Product.findAll({
+    include: [
+      { model: Category},
+      { model: Tag, through: ProductTag, as: 'tags'},
+    ],
+  })
+  .then((results) =>{
+    res.json(results);
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 });
 
 // get one product
 router.get('/:id', (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
+  Product.findOne({
+    where: {
+      id: req.params.id,
+    },
+    include:[
+      { model: Category},
+      { model: Tag, through: ProductTag, as: 'tags'},
+    ],
+  })
+  .then((results) => {
+    if (!results) {
+      res.status(404).json({
+        message: `${req.params.id} not found. PLease try again`,
+      });
+      return;
+    }
+    res.json(results);
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 });
 
 // create new product
@@ -91,6 +126,24 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
+  Product.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+  .then ((results) => {
+    if(!results) {
+      res.status(404).json({
+        message: `${req.params.id} not found. Please try again`,
+      });
+      return;
+    }
+    res.json(results);
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 });
 
 module.exports = router;
