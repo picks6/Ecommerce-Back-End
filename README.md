@@ -9,7 +9,8 @@
   8. [Github](#Github)
   9. [Email](#Email)
   
-  # Ecommerce Backend
+# Ecommerce Backend
+
 # Description
 A Demo of a backend for an e-commerce server. Given the starter code, we had to create routes to interact with the database
 # Installation
@@ -22,7 +23,8 @@ Easy to update using Insomnia, maintains inventory for the website
 Javascript, Express, Sequelize, mysql, Dotenv
 
 # Test
-Tested in insomnia, Video is included
+Tested in insomnia, Video is included 
+https://youtu.be/MqqhP8bpd2c
 # Github
 picks6
 # Email
