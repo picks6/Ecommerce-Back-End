@@ -1,11 +1,9 @@
 const router = require('express').Router();
 const { Tag, Product, ProductTag } = require('../../models');
 
-// The `/api/tags` endpoint
-
+// TAGS ROUTES
+// GET ALL
 router.get('/', (req, res) => {
-  // find all tags
-  // be sure to include its associated Product data
   Tag.findAll({
     include: [{ model: Product, through: ProductTag, as: 'products' }],
   })
@@ -18,9 +16,9 @@ router.get('/', (req, res) => {
     });
 });
 
+//GET BY ID
+
 router.get('/:id', (req, res) => {
-  // find a single tag by its `id`
-  // be sure to include its associated Product data
   Tag.findOne({
     where: {
       id: req.params.id,
@@ -30,7 +28,7 @@ router.get('/:id', (req, res) => {
     .then((results) => {
       if (!results) {
         res.status(404).json({
-          message: `${req.params.id} not found. Please try again`,
+          message: `No match for ${req.params.id}. Please try again with different ID.`,
         });
         return;
       }
@@ -40,11 +38,11 @@ router.get('/:id', (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
-
 });
 
+// CREATE NEW TAG
+
 router.post('/', (req, res) => {
-  // create a new tag
   Tag.create({
     tag_name: req.body.tag_name,
   })
@@ -57,18 +55,18 @@ router.post('/', (req, res) => {
     });
 });
 
+// UPDATE TAG
+
 router.put('/:id', (req, res) => {
-  // update a tag's name by its `id` value
   Tag.update(req.body, {
-    where: 
-    {
+    where: {
       id: req.params.id,
     },
   })
     .then((results) => {
-      if (!results) {
+      if (!results[0]) {
         res.status(404).json({
-          message: `${req.params.id} not found. Please try again`,
+          message: `No match for ${req.params.id}. Please try again with different ID.`,
         });
         return;
       }
@@ -80,22 +78,21 @@ router.put('/:id', (req, res) => {
     });
 });
 
+// DELETE TAG
+
 router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
   Tag.destroy({
-    where:
-    {
+    where: {
       id: req.params.id,
     },
   })
     .then((results) => {
       if (!results) {
         res.status(404).json({
-          message: `${req.params.id} not found. Please try again`,
+          message: `No match for ${req.params.id}. Please try again with different ID.`,
         });
         return;
       }
-
       res.json(results);
     })
     .catch((err) => {

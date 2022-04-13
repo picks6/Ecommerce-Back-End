@@ -1,26 +1,27 @@
 const router = require('express').Router();
+const res = require('express/lib/response');
 const { Category, Product } = require('../../models');
 
-// The `/api/categories` endpoint
+
+//CATEGORY ROUTES
+//GET ALL
 
 router.get('/', (req, res) => {
-  // find all categories
-    // be sure to include its associated Products
   Category.findAll({
-    include: [{model: Product}],
+    include: [{ model: Product }],
   })
-  .then((results) => {
-    res.json(results);
-  })
-  .catch((err) => {
-    console.log(err);
-    res.status(500).json(err);
-  });
+    .then((results) => {
+      res.json(results);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
+//GET BY ID
+
 router.get('/:id', (req, res) => {
-  // find one category by its `id` value
-  // be sure to include its associated Products
   Category.findOne({
     where: {
       id: req.params.id,
@@ -31,37 +32,39 @@ router.get('/:id', (req, res) => {
       },
     ],
   })
-  .then((results) => {
-    if(!results) {
-      res.status(404).json({
-        message: `No results for ${req.params.id}. Please try another category`
-      });
-      return;
-    }
-    res.json(results);
-  })
-  .catch((err) => {
-    console.log(err);
-    res.status(500).json(err);
-  });
+    .then((results) => {
+      if (!results) {
+        res.status(404).json({
+          message: `No match for ${req.params.id}. Please try again with different ID.`,
+        });
+        return;
+      }
+      res.json(results);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
+//Update Category
+
 router.post('/', (req, res) => {
-  // create a new category
   Category.create({
     category_name: req.body.category_name,
   })
-  .then((results) => {
-    res.json(results);
-  })
-  .catch((err) => {
-    console.log(err);
-    res.status(500).json(err);
-  }); 
+    .then((results) => {
+      res.json(results);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
+//Update Route
+
 router.put('/:id', (req, res) => {
-  // update a category by its `id` value
   Category.update(
     {
       category_name: req.body.category_name,
@@ -72,41 +75,41 @@ router.put('/:id', (req, res) => {
       },
     }
   )
-  .then((results) =>{ 
-    if(!results){
-      res.status(404).json({
-        message: `${req.params.id} was not found, please try again`,
-      });
-      return;
-    }
-    res.json(results);
-  })
-  .catch((err) => {
-    console.log(err);
-    res.status(500).json(err);
-  });
+    .then((results) => {
+      if (!results) {
+        res.status(404).json({
+           message: `No match for ${req.params.id}. Please try again with different ID.`,
+        });
+        return;
+      }
+      res.json(results);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
+// Delete by ID
 router.delete('/:id', (req, res) => {
-  // delete a category by its `id` value
   Category.destroy({
     where: {
       id: req.params.id,
     },
   })
-  .then((results) => {
-    if(!results){
-      res.status(404).json({
-        message: `${req.params.id} not found, please try again`,
-      });
-      return;
-    }
-    res.json(results);
-  })
-  .catch((err) => {
-    console.log(err);
-    res.status(500).json(err);
-  });
+    .then((results) => {
+      if (!results) {
+        res.status(404).json({
+          message: `No match for ${req.params.id}. Please try again with different ID.`,
+        });
+        return;
+      }
+      res.json(results);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;
